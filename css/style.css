@@ -23,6 +23,11 @@
     --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.15);
 
     --transition: 0.2s ease;
+
+    /* Scrollbar colors */
+    --scrollbar-track: #f1f1f1;
+    --scrollbar-thumb: #888;
+    --scrollbar-thumb-hover: #555;
 }
 
 [data-theme="dark"] {
@@ -38,6 +43,11 @@
     --border-color: #30363d;
     --accent-color: #58a6ff;
     --accent-hover: #79c0ff;
+
+    /* Scrollbar colors for dark mode */
+    --scrollbar-track: #161b22;
+    --scrollbar-thumb: #30363d;
+    --scrollbar-thumb-hover: #484f58;
 }
 
 /* ========================================
@@ -221,6 +231,30 @@ a:hover {
     position: sticky;
     top: var(--header-height);
     height: calc(100vh - var(--header-height));
+}
+
+/* Scrollbar styling for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+}
+
+/* Firefox scrollbar */
+.sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 .nav-menu {
