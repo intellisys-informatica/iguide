@@ -1,0 +1,145 @@
+{
+	"version": "1.0.0",
+	"title": "iGide - Guia de Desenvolvimento",
+	"description": "Guia completo para desenvolvimento colaborativo com IA e Git",
+	"categories": [
+		{
+			"id": "ambiente",
+			"title": "Ambiente de Desenvolvimento",
+			"icon": "🛠️",
+			"docs": [
+				{
+					"id": "setup-inicial",
+					"title": "Setup Inicial",
+					"description": "Como configurar o ambiente de desenvolvimento do zero",
+					"file": "ambiente/setup-inicial.md"
+				},
+				{
+					"id": "ferramentas",
+					"title": "Ferramentas Essenciais",
+					"description": "Lista de ferramentas necessárias para o desenvolvimento",
+					"file": "ambiente/ferramentas.md"
+				}
+			]
+		},
+		{
+			"id": "padroes",
+			"title": "Padrões de Código",
+			"icon": "📝",
+			"docs": [
+				{
+					"id": "javascript",
+					"title": "JavaScript/TypeScript",
+					"description": "Padrões e convenções para JS/TS",
+					"file": "padroes/javascript.md"
+				},
+				{
+					"id": "css",
+					"title": "CSS/SCSS",
+					"description": "Padrões para estilização",
+					"file": "padroes/css.md"
+				},
+				{
+					"id": "nomenclatura",
+					"title": "Nomenclatura",
+					"description": "Convenções de nomenclatura de arquivos, variáveis e funções",
+					"file": "padroes/nomenclatura.md"
+				},
+				{
+					"id": "golang",
+					"title": "Go",
+					"description": "Padrões e convenções para Go lang",
+					"file": "padroes/golang.md"
+				}
+			]
+		},
+		{
+			"id": "git",
+			"title": "Git & Versionamento",
+			"icon": "🔀",
+			"docs": [
+				{
+					"id": "commits",
+					"title": "Regras de Commits",
+					"description": "Conventional Commits e boas práticas",
+					"file": "git/commits.md"
+				},
+				{
+					"id": "branches",
+					"title": "Estratégia de Branches",
+					"description": "Git Flow e organização de branches",
+					"file": "git/branches.md"
+				},
+				{
+					"id": "changelog",
+					"title": "Changelog",
+					"description": "Como escrever e manter changelogs",
+					"file": "git/changelog.md"
+				}
+			]
+		},
+		{
+			"id": "ia",
+			"title": "Trabalho com IA",
+			"icon": "🤖",
+			"docs": [
+				{
+					"id": "boas-praticas-ia",
+					"title": "Boas Práticas",
+					"description": "Como trabalhar efetivamente com IA no desenvolvimento",
+					"file": "ia/boas-praticas.md"
+				},
+				{
+					"id": "prompts",
+					"title": "Guia de Prompts",
+					"description": "Exemplos de prompts efetivos para desenvolvimento",
+					"file": "ia/prompts.md"
+				}
+			]
+		},
+		{
+			"id": "config",
+			"title": "Configurações",
+			"icon": "⚙️",
+			"docs": [
+				{
+					"id": "vscode",
+					"title": "VSCode",
+					"description": "Configurações e extensões recomendadas para VSCode",
+					"file": "config/vscode.md"
+				},
+				{
+					"id": "eslint",
+					"title": "ESLint",
+					"description": "Configuração do ESLint para o projeto",
+					"file": "config/eslint.md"
+				},
+				{
+					"id": "prettier",
+					"title": "Prettier",
+					"description": "Configuração do Prettier para formatação de código",
+					"file": "config/prettier.md"
+				}
+			]
+		},
+		{
+			"id": "organizacao",
+			"title": "Organização de Projeto",
+			"icon": "📁",
+			"docs": [
+				{
+					"id": "estrutura-pastas",
+					"title": "Estrutura de Pastas",
+					"description": "Como organizar a estrutura de diretórios do projeto",
+					"file": "organizacao/estrutura-pastas.md"
+				},
+				{
+					"id": "arquitetura",
+					"title": "Arquitetura",
+					"description": "Padrões arquiteturais recomendados",
+					"file": "organizacao/arquitetura.md"
+				}
+			]
+		}
+	]
+}
