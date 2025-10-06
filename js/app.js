@@ -209,10 +209,30 @@ class App {
      * Setup theme toggle
      */
     setupTheme() {
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        this.updateThemeIcon(savedTheme);
+        // Check if user has a saved preference
+        const savedTheme = localStorage.getItem('theme');
+
+        let theme;
+        if (savedTheme) {
+            // User has explicitly chosen a theme
+            theme = savedTheme;
+        } else {
+            // Detect system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            theme = prefersDark ? 'dark' : 'light';
+        }
+
+        document.documentElement.setAttribute('data-theme', theme);
+        this.updateThemeIcon(theme);
+
+        // Listen for system theme changes (only if user hasn't set a preference)
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+                const newTheme = e.matches ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                this.updateThemeIcon(newTheme);
+            }
+        });
 
         // Setup toggle button
         this.elements.themeToggle.addEventListener('click', () => {
