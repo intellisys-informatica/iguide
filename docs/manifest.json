@@ -9,6 +9,12 @@
 			"icon": "🛠️",
 			"docs": [
 				{
+					"id": "ReactJS",
+					"title": "Padrões de Projeto - ReactJS",
+					"description": "<Pendente>",
+					"file": "ambiente/iniciando-reactjs.md"
+				},
+				{
 					"id": "setup-inicial",
 					"title": "Setup Inicial",
 					"description": "Como configurar o ambiente de desenvolvimento do zero",
