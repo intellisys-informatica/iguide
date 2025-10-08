@@ -1,9 +1,9 @@
-# 📂 Estrutura do Projeto iGide
+# 📂 Estrutura do Projeto DevHub
 
 ## Árvore de Diretórios
 
 ```
-iGide/
+devhub/
 │
 ├── 📄 index.html                    # Página principal (ABRA ESTE)
 ├── 📄 README.md                     # Documentação do projeto
