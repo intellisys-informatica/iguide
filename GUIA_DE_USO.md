@@ -1,6 +1,6 @@
-# 📚 Guia de Uso - iGide
+# 📚 Guia de Uso - DevHub
 
-Instruções completas para usar e personalizar o iGide.
+Instruções completas para usar e personalizar o DevHub.
 
 ## 🚀 Início Rápido
 
@@ -289,7 +289,7 @@ const exemplo = 'código';
 ## 📁 Estrutura de Arquivos
 
 ```
-iGide/
+devhub/
 ├── index.html              # Página principal ← ABRA ESTE ARQUIVO
 ├── css/
 │   ├── style.css          # Estilos gerais
