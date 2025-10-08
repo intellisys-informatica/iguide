@@ -1,4 +1,4 @@
-# 🤖 iGide - Guia de Desenvolvimento
+# 🤖 Intellisys DevHub - Guia de Desenvolvimento
 
 Guia completo para desenvolvimento colaborativo com IA e Git.
 
@@ -9,7 +9,7 @@ Guia completo para desenvolvimento colaborativo com IA e Git.
 
 ## 📖 Sobre
 
-**iGide** é uma documentação interativa e moderna que serve como guia de referência para equipes de desenvolvimento. Contém:
+**Intellisys DevHub** é uma documentação interativa e moderna que serve como guia de referência para equipes de desenvolvimento. Contém:
 
 - 🛠️ **Ambiente de Desenvolvimento** - Setup completo e ferramentas essenciais
 - 📝 **Padrões de Código** - Convenções e boas práticas
@@ -20,7 +20,7 @@ Guia completo para desenvolvimento colaborativo com IA e Git.
 
 ## 🚀 Demo
 
-Acesse: [https://seuusuario.github.io/iGide](https://seuusuario.github.io/iGide)
+Acesse: [https://intellisys-informatica.github.io/devhub](https://intellisys-informatica.github.io/devhub)
 
 ## ✨ Características
 
@@ -36,7 +36,7 @@ Acesse: [https://seuusuario.github.io/iGide](https://seuusuario.github.io/iGide)
 ## 📂 Estrutura do Projeto
 
 ```
-iGide/
+devhub/
 ├── index.html              # Página principal
 ├── css/
 │   ├── style.css          # Estilos principais
@@ -65,8 +65,8 @@ iGide/
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/seuusuario/iGide.git
-cd iGide
+git clone git@github.com:intellisys-informatica/devhub.git
+cd devhub
 ```
 
 ### 2. Abra o projeto
@@ -157,7 +157,7 @@ git add .
 git commit -m "Initial commit"
 
 # Adicionar remote
-git remote add origin https://github.com/seuusuario/iGide.git
+git remote add origin git@github.com:intellisys-informatica/devhub.git
 git push -u origin main
 ```
 
@@ -170,7 +170,7 @@ git push -u origin main
 ### 3. Acessar
 
 Seu site estará disponível em:
-`https://seuusuario.github.io/iGide`
+`https://intellisys-informatica.github.io/devhub`
 
 ## 🛠️ Tecnologias
 
@@ -195,7 +195,7 @@ Contribuições são bem-vindas! Por favor:
 
 ## 📧 Contato
 
-Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/seuusuario/iGide/issues).
+Se tiver dúvidas ou sugestões, abra uma [issue](https://github.com/intellisys-informatica/devhub/issues).
 
 ---
 

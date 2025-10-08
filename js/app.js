@@ -39,7 +39,7 @@ class App {
             // Setup hash navigation
             this.navigation.setupHashNavigation();
 
-            console.log('✅ iGide initialized successfully');
+            console.log('✅ DevHub initialized successfully');
         } catch (error) {
             console.error('Failed to initialize app:', error);
             this.showError('Falha ao inicializar a aplicação. Por favor, recarregue a página.');
@@ -107,7 +107,7 @@ class App {
     showWelcome() {
         this.elements.content.innerHTML = `
             <div class="welcome">
-                <h1>🤖 Bem-vindo ao iGide</h1>
+                <h1>🤖 Bem-vindo ao Intellisys DevHub</h1>
                 <p class="subtitle">Guia completo para desenvolvimento colaborativo com IA e Git</p>
 
                 <div class="features">
@@ -165,7 +165,7 @@ class App {
      * @param {string} filePath - Document file path
      */
     addEditLink(filePath) {
-        const githubUrl = `https://github.com/yourusername/iGide/edit/main/docs/${filePath}`;
+        const githubUrl = `https://github.com/intellisys-informatica/devhub/edit/main/docs/${filePath}`;
         const editLink = document.createElement('a');
         editLink.href = githubUrl;
         editLink.target = '_blank';

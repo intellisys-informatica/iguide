@@ -1,6 +1,6 @@
 {
 	"version": "1.0.0",
-	"title": "iGide - Guia de Desenvolvimento",
+	"title": "DevHub - Guia de Desenvolvimento",
 	"description": "Guia completo para desenvolvimento colaborativo com IA e Git",
 	"categories": [
 		{
@@ -65,22 +65,10 @@
 			"icon": "🔀",
 			"docs": [
 				{
-					"id": "commits",
-					"title": "Regras de Commits",
-					"description": "Conventional Commits e boas práticas",
-					"file": "git/commits.md"
-				},
-				{
-					"id": "branches",
-					"title": "Estratégia de Branches",
-					"description": "Git Flow e organização de branches",
-					"file": "git/branches.md"
-				},
-				{
-					"id": "changelog",
-					"title": "Changelog",
-					"description": "Como escrever e manter changelogs",
-					"file": "git/changelog.md"
+					"id": "fluxo",
+					"title": "Guia git e gitHub",
+					"description": "Guia de definição do fluxo de trabalho padrão da equipe de desenvolvimento para trabalhar com Git e GitHub em projetos existente",
+					"file": "git/git-workflow-guide.md"
 				}
 			]
 		},
