@@ -47,32 +47,52 @@ export class Navigation {
         if (!this.manifest || !this.elements.navMenu) return;
 
         const menuHTML = this.manifest.categories.map(category => {
-            const itemsHTML = category.docs.map(doc => {
-                const isActive = this.currentDoc?.id === doc.id ? 'active' : '';
-                return `
-                    <a href="#doc/${doc.id}" class="nav-item ${isActive}" data-doc-id="${doc.id}">
-                        ${doc.title}
-                    </a>
-                `;
-            }).join('');
-
-            return `
-                <div class="nav-category" data-category-id="${category.id}">
-                    <div class="nav-category-header">
-                        <span class="nav-category-icon">${category.icon || '📄'}</span>
-                        <span class="nav-category-title">${category.title}</span>
-                        <span class="nav-category-toggle">▼</span>
-                    </div>
-                    <div class="nav-category-items">
-                        ${itemsHTML}
-                    </div>
-                </div>
-            `;
+            return this.renderCategory(category, 0);
         }).join('');
 
         this.elements.navMenu.innerHTML = menuHTML;
         this.setupCategoryToggles();
         this.setupNavLinks();
+    }
+
+    /**
+     * Render category (recursive for subcategories)
+     * @param {Object} category - Category object
+     * @param {number} level - Nesting level (0-2)
+     * @returns {string} HTML string
+     */
+    renderCategory(category, level = 0) {
+        if (level > 2) {
+            console.warn('Maximum subcategory depth (3 levels) exceeded');
+            return '';
+        }
+
+        const itemsHTML = category.docs.map(doc => {
+            const isActive = this.currentDoc?.id === doc.id ? 'active' : '';
+            return `
+                <a href="#doc/${doc.id}" class="nav-item ${isActive}" data-doc-id="${doc.id}">
+                    ${doc.title}
+                </a>
+            `;
+        }).join('');
+
+        const subcategoriesHTML = category.subcategories && category.subcategories.length > 0
+            ? category.subcategories.map(sub => this.renderCategory(sub, level + 1)).join('')
+            : '';
+
+        return `
+            <div class="nav-category nav-category-level-${level}" data-category-id="${category.id}">
+                <div class="nav-category-header">
+                    <span class="nav-category-icon">${category.icon || '📄'}</span>
+                    <span class="nav-category-title">${category.title}</span>
+                    <span class="nav-category-toggle">▼</span>
+                </div>
+                <div class="nav-category-items">
+                    ${itemsHTML}
+                    ${subcategoriesHTML}
+                </div>
+            </div>
+        `;
     }
 
     /**
@@ -154,17 +174,36 @@ export class Navigation {
      * @returns {Object|null} Document object
      */
     findDocById(docId) {
-        for (const category of this.manifest.categories) {
+        return this.findDocInCategory(docId, this.manifest.categories);
+    }
+
+    /**
+     * Find document in category tree (recursive)
+     * @param {string} docId - Document ID
+     * @param {Array} categories - Categories array
+     * @param {Array} breadcrumb - Breadcrumb trail
+     * @returns {Object|null} Document object
+     */
+    findDocInCategory(docId, categories, breadcrumb = []) {
+        for (const category of categories) {
+            const currentBreadcrumb = [...breadcrumb, {
+                id: category.id,
+                title: category.title,
+                icon: category.icon
+            }];
+
             const doc = category.docs.find(d => d.id === docId);
             if (doc) {
                 return {
                     ...doc,
-                    category: {
-                        id: category.id,
-                        title: category.title,
-                        icon: category.icon
-                    }
+                    category: currentBreadcrumb[currentBreadcrumb.length - 1],
+                    breadcrumb: currentBreadcrumb
                 };
+            }
+
+            if (category.subcategories && category.subcategories.length > 0) {
+                const found = this.findDocInCategory(docId, category.subcategories, currentBreadcrumb);
+                if (found) return found;
             }
         }
         return null;
@@ -200,15 +239,19 @@ export class Navigation {
     updateBreadcrumb(doc) {
         if (!this.elements.breadcrumb) return;
 
-        const breadcrumbHTML = `
-            <a href="#" data-doc="home">Home</a>
-            <span class="breadcrumb-separator"></span>
-            <span>${doc.category.icon} ${doc.category.title}</span>
-            <span class="breadcrumb-separator"></span>
-            <span>${doc.title}</span>
-        `;
+        const breadcrumbParts = ['<a href="#" data-doc="home">Home</a>'];
 
-        this.elements.breadcrumb.innerHTML = breadcrumbHTML;
+        if (doc.breadcrumb && doc.breadcrumb.length > 0) {
+            doc.breadcrumb.forEach(crumb => {
+                breadcrumbParts.push('<span class="breadcrumb-separator"></span>');
+                breadcrumbParts.push(`<span>${crumb.icon} ${crumb.title}</span>`);
+            });
+        }
+
+        breadcrumbParts.push('<span class="breadcrumb-separator"></span>');
+        breadcrumbParts.push(`<span>${doc.title}</span>`);
+
+        this.elements.breadcrumb.innerHTML = breadcrumbParts.join('');
 
         // Setup home link
         const homeLink = this.elements.breadcrumb.querySelector('[data-doc="home"]');
@@ -382,19 +425,36 @@ export class Navigation {
      */
     getAllDocs() {
         if (!this.manifest) return [];
+        return this.extractDocsFromCategories(this.manifest.categories);
+    }
 
+    /**
+     * Extract all documents from category tree (recursive)
+     * @param {Array} categories - Categories array
+     * @param {Array} breadcrumb - Breadcrumb trail
+     * @returns {Array} All documents
+     */
+    extractDocsFromCategories(categories, breadcrumb = []) {
         const allDocs = [];
-        this.manifest.categories.forEach(category => {
+
+        categories.forEach(category => {
+            const currentBreadcrumb = [...breadcrumb, {
+                id: category.id,
+                title: category.title,
+                icon: category.icon
+            }];
+
             category.docs.forEach(doc => {
                 allDocs.push({
                     ...doc,
-                    category: {
-                        id: category.id,
-                        title: category.title,
-                        icon: category.icon
-                    }
+                    category: currentBreadcrumb[currentBreadcrumb.length - 1],
+                    breadcrumb: currentBreadcrumb
                 });
             });
+
+            if (category.subcategories && category.subcategories.length > 0) {
+                allDocs.push(...this.extractDocsFromCategories(category.subcategories, currentBreadcrumb));
+            }
         });
 
         return allDocs;

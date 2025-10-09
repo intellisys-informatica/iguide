@@ -265,6 +265,33 @@ a:hover {
     margin-bottom: 1.5rem;
 }
 
+/* Nível 0 - Categoria principal */
+.nav-category-level-0 {
+    margin-bottom: 1.5rem;
+}
+
+/* Nível 1 - Subcategoria */
+.nav-category-level-1 {
+    margin-bottom: 0.5rem;
+}
+
+.nav-category-level-1 > .nav-category-header {
+    padding-left: 2.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Nível 2 - Sub-subcategoria */
+.nav-category-level-2 {
+    margin-bottom: 0.25rem;
+}
+
+.nav-category-level-2 > .nav-category-header {
+    padding-left: 3.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
 .nav-category-header {
     display: flex;
     align-items: center;
@@ -282,6 +309,11 @@ a:hover {
 
 .nav-category-icon {
     font-size: 1.2rem;
+}
+
+.nav-category-level-1 > .nav-category-header .nav-category-icon,
+.nav-category-level-2 > .nav-category-header .nav-category-icon {
+    font-size: 1rem;
 }
 
 .nav-category-title {
@@ -313,6 +345,15 @@ a:hover {
     color: var(--text-secondary);
     transition: all var(--transition);
     border-left: 3px solid transparent;
+}
+
+/* Ajusta padding dos itens baseado no nível da categoria pai */
+.nav-category-level-1 > .nav-category-items > .nav-item {
+    padding-left: 4rem;
+}
+
+.nav-category-level-2 > .nav-category-items > .nav-item {
+    padding-left: 5rem;
 }
 
 .nav-item:hover {
