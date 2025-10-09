@@ -10,7 +10,7 @@ Este guia define o fluxo de trabalho padrão da equipe de desenvolvimento da Int
 
 ### Branches Principais
 
-- **`main`** (ou `master`): código em produção, sempre estável
+- **`main`**: código em produção, sempre estável
 - **`develop`**: branch de desenvolvimento, contém as últimas alterações aprovadas
 
 ### Branches de Trabalho
