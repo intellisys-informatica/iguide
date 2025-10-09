@@ -9,22 +9,32 @@
 			"icon": "🛠️",
 			"docs": [
 				{
-					"id": "ReactJS",
-					"title": "Padrões de Projeto - ReactJS",
-					"description": "<Pendente>",
-					"file": "ambiente/iniciando-reactjs.md"
-				},
-				{
 					"id": "setup-inicial",
 					"title": "Setup Inicial",
-					"description": "Como configurar o ambiente de desenvolvimento do zero",
+					"description": "Guia completo de instalação e configuração do ambiente",
 					"file": "ambiente/setup-inicial.md"
-				},
+				}
+			],
+			"subcategories": [
 				{
-					"id": "ferramentas",
-					"title": "Ferramentas Essenciais",
-					"description": "Lista de ferramentas necessárias para o desenvolvimento",
-					"file": "ambiente/ferramentas.md"
+					"id": "reactjs",
+					"title": "ReactJS",
+					"icon": "⚛️",
+					"docs": [
+						{
+							"id": "padroes-reactjs",
+							"title": "Padrões e Convenções",
+							"description": "Guia completo de padrões React + TypeScript do time",
+							"file": "ambiente/reactjs/padroes-react.md"
+						},
+						{
+							"id": "script-estruturacao",
+							"title": "Script de Estruturação",
+							"description": "Como instalar e usar o script de estruturação de projetos",
+							"file": "ambiente/reactjs/install-script.md"
+						}
+					],
+					"subcategories": []
 				}
 			]
 		},
@@ -57,7 +67,8 @@
 					"description": "Padrões e convenções para Go lang",
 					"file": "padroes/golang.md"
 				}
-			]
+			],
+			"subcategories": []
 		},
 		{
 			"id": "git",
@@ -70,7 +81,8 @@
 					"description": "Guia de definição do fluxo de trabalho padrão da equipe de desenvolvimento para trabalhar com Git e GitHub em projetos existente",
 					"file": "git/git-workflow-guide.md"
 				}
-			]
+			],
+			"subcategories": []
 		},
 		{
 			"id": "ia",
@@ -89,7 +101,8 @@
 					"description": "Exemplos de prompts efetivos para desenvolvimento",
 					"file": "ia/prompts.md"
 				}
-			]
+			],
+			"subcategories": []
 		},
 		{
 			"id": "config",
@@ -114,7 +127,8 @@
 					"description": "Configuração do Prettier para formatação de código",
 					"file": "config/prettier.md"
 				}
-			]
+			],
+			"subcategories": []
 		},
 		{
 			"id": "organizacao",
@@ -133,7 +147,8 @@
 					"description": "Padrões arquiteturais recomendados",
 					"file": "organizacao/arquitetura.md"
 				}
-			]
+			],
+			"subcategories": []
 		}
 	]
 }
