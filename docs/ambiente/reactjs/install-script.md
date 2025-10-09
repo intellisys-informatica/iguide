@@ -1,23 +1,27 @@
-# Instalação do Script de Scaffolding
+# Instalação Manual do Script de Estruturação React
+
+## 📖 Visão Geral
+
+Este script cria a estrutura de pastas `src/` para projetos React seguindo os padrões do time. Ele **não** cria `package.json` nem instala dependências - apenas organiza a estrutura de diretórios, configura o Git Flow e cria os arquivos essenciais.
 
 ## 🚀 Instalação Automática (Recomendado)
 
-A forma mais rápida de instalar é usando o instalador automático:
+Use o instalador automático que configura tudo:
 
 ### Bash
 ```bash
-curl -fsSL https://raw.githubusercontent.com/seu-org/seu-repo/main/assets/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | bash
 ```
 
 ### Zsh
 ```bash
-curl -fsSL https://raw.githubusercontent.com/seu-org/seu-repo/main/assets/install.sh | zsh
+curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | zsh
 ```
 
 ### Download Local do Instalador
 ```bash
 # Baixar
-curl -fsSL https://raw.githubusercontent.com/seu-org/seu-repo/main/assets/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh -o install.sh
 
 # Executar
 chmod +x install.sh
@@ -161,14 +165,17 @@ Se aparecer a mensagem de uso, está funcionando!
 
 ## Uso do Script
 
-### Criar novo projeto
-```bash
-create-react-ts meu-projeto
-```
+O script deve ser executado **na raiz de um projeto React existente** ou em um diretório vazio:
 
-### Criar projeto sem instalar dependências
 ```bash
-create-react-ts meu-projeto --skip-install
+# Em um projeto React existente (com package.json)
+cd meu-projeto-react
+create-react-ts
+
+# OU em um diretório vazio
+mkdir meu-novo-projeto
+cd meu-novo-projeto
+create-react-ts
 ```
 
 ---
@@ -178,7 +185,7 @@ create-react-ts meu-projeto --skip-install
 O script cria a seguinte estrutura:
 
 ```
-meu-projeto/
+.
 ├── src/
 │   ├── app/
 │   │   ├── providers/
@@ -206,56 +213,48 @@ meu-projeto/
 │   ├── App.tsx
 │   ├── main.tsx
 │   └── vite-env.d.ts
-├── public/
-├── .env.example
-├── .eslintrc.cjs
-├── .gitignore
-├── index.html
-├── package.json
-├── postcss.config.js
-├── README.md
-├── tailwind.config.js
-├── tsconfig.json
-├── tsconfig.node.json
-└── vite.config.ts
+├── vite.config.ts (criado/atualizado)
+├── .gitignore (criado se não existir)
+└── .git/ (Git Flow inicializado)
 ```
 
 ---
 
-## Configurações Incluídas
+## O que o script faz
 
-✅ **TypeScript** - Strict mode ativado
-✅ **Vite** - Build tool rápido
-✅ **React 18** - Versão mais recente
-✅ **React Router** - Navegação
-✅ **React Hook Form** - Gerenciamento de formulários
-✅ **Zod** - Validação de schemas
-✅ **Axios** - Cliente HTTP
-✅ **Tailwind CSS** - Estilização
-✅ **ESLint** - Linting
-✅ **Path Aliases** - `@/`, `@app/`, `@features/`, `@shared/`
-✅ **Git** - Repositório inicializado
+✅ **Estrutura de pastas** - Cria `src/` com `app/`, `features/`, `shared/`
+✅ **Vite config** - Configura path aliases (`@/`, `@app/`, `@features/`, `@shared/`)
+✅ **Git Flow** - Inicializa Git Flow com branches `main` e `develop`
+✅ **.gitignore** - Cria se não existir
+✅ **Arquivos fonte** - Cria arquivos TypeScript de exemplo
 
----
+## O que o script NÃO faz
 
-## Comandos Disponíveis
+❌ **Não cria package.json** - Use `npm create vite@latest` antes
+❌ **Não instala dependências** - Execute `npm install` após o script
+❌ **Não cria arquivos de config** do projeto (ESLint, Tailwind, etc.)
 
-Após criar o projeto:
+## Fluxo recomendado
 
+1. Criar projeto com Vite:
 ```bash
+npm create vite@latest meu-projeto -- --template react-ts
 cd meu-projeto
+```
 
-# Desenvolvimento
+2. Executar script de estruturação:
+```bash
+create-react-ts
+```
+
+3. Instalar dependências adicionais:
+```bash
+npm install react-router-dom react-hook-form zod axios
+```
+
+4. Iniciar desenvolvimento:
+```bash
 npm run dev
-
-# Build de produção
-npm run build
-
-# Linting
-npm run lint
-
-# Preview da build
-npm run preview
 ```
 
 ---

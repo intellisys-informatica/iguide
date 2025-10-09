@@ -47,13 +47,7 @@ validate_project_name() {
 
 # Create directory structure
 create_structure() {
-    local project_name=$1
-
-    print_header "Criando estrutura do projeto: $project_name"
-
-    # Create root directory
-    mkdir -p "$project_name"
-    cd "$project_name"
+    print_header "Criando estrutura do projeto na pasta src/"
 
     print_info "Criando estrutura de pastas..."
 
@@ -66,109 +60,12 @@ create_structure() {
     # Create shared components structure
     mkdir -p src/shared/components/{ui,layout}
 
-    # Create public folder
-    mkdir -p public
-
     print_success "Estrutura de pastas criada"
 }
 
 # Create configuration files
 create_config_files() {
     print_info "Criando arquivos de configuração..."
-
-    # package.json
-    cat > package.json << 'EOF'
-{
-  "name": "PROJECT_NAME",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.0",
-    "react-hook-form": "^7.51.5",
-    "@hookform/resolvers": "^3.4.2",
-    "zod": "^3.23.8",
-    "axios": "^1.6.8",
-    "clsx": "^2.1.0",
-    "tailwind-merge": "^2.2.2"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.66",
-    "@types/react-dom": "^18.2.22",
-    "@typescript-eslint/eslint-plugin": "^7.2.0",
-    "@typescript-eslint/parser": "^7.2.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.19",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.6",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "typescript": "^5.2.2",
-    "vite": "^5.2.0"
-  }
-}
-EOF
-
-    # tsconfig.json
-    cat > tsconfig.json << 'EOF'
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "baseUrl": ".",
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-
-    /* Path aliases */
-    "paths": {
-      "@/*": ["./src/*"],
-      "@app/*": ["./src/app/*"],
-      "@features/*": ["./src/features/*"],
-      "@shared/*": ["./src/shared/*"]
-    }
-  },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
-}
-EOF
-
-    # tsconfig.node.json
-    cat > tsconfig.node.json << 'EOF'
-{
-  "compilerOptions": {
-    "composite": true,
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true
-  },
-  "include": ["vite.config.ts"]
-}
-EOF
 
     # vite.config.ts
     cat > vite.config.ts << 'EOF'
@@ -189,56 +86,9 @@ export default defineConfig({
 });
 EOF
 
-    # .eslintrc.cjs
-    cat > .eslintrc.cjs << 'EOF'
-module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    '@typescript-eslint/no-explicit-any': 'warn',
-  },
-}
-EOF
-
-    # tailwind.config.js
-    cat > tailwind.config.js << 'EOF'
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-EOF
-
-    # postcss.config.js
-    cat > postcss.config.js << 'EOF'
-export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}
-EOF
-
-    # .gitignore
-    cat > .gitignore << 'EOF'
+    # .gitignore (se não existir)
+    if [ ! -f .gitignore ]; then
+        cat > .gitignore << 'EOF'
 # Logs
 logs
 *.log
@@ -269,50 +119,7 @@ dist-ssr
 .env.local
 .env.production
 EOF
-
-    # .env.example
-    cat > .env.example << 'EOF'
-VITE_API_BASE_URL=http://localhost:3000/api
-VITE_API_KEY=your-api-key-here
-EOF
-
-    # README.md
-    cat > README.md << EOF
-# PROJECT_NAME
-
-Projeto React + TypeScript seguindo os padrões do time.
-
-## Estrutura do Projeto
-
-\`\`\`
-src/
-├── app/              # Configuração da aplicação
-├── features/         # Módulos por funcionalidade
-└── shared/           # Código compartilhado
-\`\`\`
-
-## Instalação
-
-\`\`\`bash
-npm install
-\`\`\`
-
-## Desenvolvimento
-
-\`\`\`bash
-npm run dev
-\`\`\`
-
-## Build
-
-\`\`\`bash
-npm run build
-\`\`\`
-
-## Padrões
-
-Este projeto segue os padrões de desenvolvimento documentados em [REACT_STANDARDS.md](./REACT_STANDARDS.md).
-EOF
+    fi
 
     print_success "Arquivos de configuração criados"
 }
@@ -320,23 +127,6 @@ EOF
 # Create source files
 create_source_files() {
     print_info "Criando arquivos fonte..."
-
-    # index.html
-    cat > index.html << 'EOF'
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PROJECT_NAME</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-EOF
 
     # src/main.tsx
     cat > src/main.tsx << 'EOF'
@@ -508,126 +298,106 @@ EOF
     print_success "Arquivos fonte criados"
 }
 
-# Replace project name in files
-replace_project_name() {
-    local project_name=$1
+# Check and install git flow
+check_git_flow() {
+    if ! command -v git-flow &> /dev/null; then
+        print_warning "Git Flow não encontrado. Instalando..."
 
-    print_info "Configurando nome do projeto..."
+        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            if command -v apt-get &> /dev/null; then
+                sudo apt-get install -y git-flow
+            elif command -v yum &> /dev/null; then
+                sudo yum install -y gitflow
+            else
+                print_error "Não foi possível instalar o Git Flow automaticamente."
+                print_info "Instale manualmente: https://github.com/nvie/gitflow/wiki/Installation"
+                exit 1
+            fi
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            if command -v brew &> /dev/null; then
+                brew install git-flow
+            else
+                print_error "Homebrew não encontrado. Instale o Git Flow manualmente."
+                exit 1
+            fi
+        else
+            print_error "Sistema operacional não suportado para instalação automática do Git Flow."
+            exit 1
+        fi
 
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        sed -i '' "s/PROJECT_NAME/$project_name/g" package.json
-        sed -i '' "s/PROJECT_NAME/$project_name/g" README.md
-        sed -i '' "s/PROJECT_NAME/$project_name/g" index.html
-    else
-        # Linux
-        sed -i "s/PROJECT_NAME/$project_name/g" package.json
-        sed -i "s/PROJECT_NAME/$project_name/g" README.md
-        sed -i "s/PROJECT_NAME/$project_name/g" index.html
+        print_success "Git Flow instalado"
     fi
-
-    print_success "Nome do projeto configurado"
 }
 
-# Initialize git
+# Initialize git with git flow
 init_git() {
-    print_info "Inicializando repositório Git..."
+    print_info "Inicializando repositório Git com Git Flow..."
 
+    check_git_flow
+
+    # Initialize git repo
     git init
+
+    # Initialize git flow with main as production branch
+    git flow init -d -f <<EOF
+main
+develop
+feature/
+release/
+hotfix/
+support/
+EOF
+
+    # Add and commit
     git add .
     git commit -m "chore: initial project setup
 
-🚀 Projeto criado seguindo padrões do time
+🚀 Estrutura React criada seguindo padrões do time
 - Estrutura de pastas baseada em features
-- TypeScript + React + Vite
-- Configurações de ESLint e Tailwind
 - Path aliases configurados (@/, @app/, @features/, @shared/)"
 
-    print_success "Repositório Git inicializado"
+    print_success "Repositório Git com Git Flow inicializado (branch: main)"
 }
 
-# Install dependencies
-install_dependencies() {
-    print_header "Instalando dependências"
-
-    if command -v npm &> /dev/null; then
-        npm install
-        print_success "Dependências instaladas com npm"
-    elif command -v yarn &> /dev/null; then
-        yarn install
-        print_success "Dependências instaladas com yarn"
-    elif command -v pnpm &> /dev/null; then
-        pnpm install
-        print_success "Dependências instaladas com pnpm"
-    else
-        print_warning "Nenhum gerenciador de pacotes encontrado. Execute 'npm install' manualmente."
-    fi
-}
 
 # Show completion message
 show_completion() {
-    local project_name=$1
+    print_header "Estrutura criada com sucesso! 🎉"
 
-    print_header "Projeto criado com sucesso! 🎉"
-
-    echo -e "${GREEN}Próximos passos:${NC}\n"
-    echo -e "  cd $project_name"
-    echo -e "  npm run dev"
     echo -e "\n${BLUE}Estrutura criada:${NC}\n"
     echo -e "  📁 src/app/          - Configuração da aplicação"
     echo -e "  📁 src/features/     - Módulos por funcionalidade"
     echo -e "  📁 src/shared/       - Código compartilhado"
-    echo -e "\n${BLUE}Comandos disponíveis:${NC}\n"
-    echo -e "  npm run dev          - Inicia servidor de desenvolvimento"
-    echo -e "  npm run build        - Build de produção"
-    echo -e "  npm run lint         - Executa ESLint"
-    echo -e "\n${YELLOW}Documentação:${NC} Consulte REACT_STANDARDS.md para padrões do time\n"
+    echo -e "\n${GREEN}Git Flow inicializado${NC}"
+    echo -e "  Branch principal: ${BLUE}main${NC}"
+    echo -e "  Branch desenvolvimento: ${BLUE}develop${NC}"
+    echo -e "\n${YELLOW}Próximo passo:${NC} Configure package.json e instale dependências conforme o projeto\n"
 }
 
 # Main function
 main() {
-    local project_name=$1
-    local skip_install=$2
-
     # Show banner
     echo -e "${BLUE}"
     echo "╔════════════════════════════════════════════╗"
-    echo "║  React + TypeScript Project Scaffolding   ║"
+    echo "║  React Structure Scaffolding              ║"
     echo "║  Baseado nos padrões do time              ║"
     echo "╚════════════════════════════════════════════╝"
     echo -e "${NC}"
 
-    # Validate input
-    if [ -z "$project_name" ]; then
-        print_error "Uso: create-react-project <nome-do-projeto> [--skip-install]"
+    # Check if we're in a project root (must have package.json or be empty)
+    if [ ! -f "package.json" ] && [ "$(ls -A)" ]; then
+        print_error "Execute este script na raiz de um projeto React existente ou em um diretório vazio"
         exit 1
     fi
 
-    validate_project_name "$project_name"
-
-    # Check if directory exists
-    if [ -d "$project_name" ]; then
-        print_error "Diretório '$project_name' já existe"
-        exit 1
-    fi
-
-    # Create project
-    create_structure "$project_name"
+    # Create project structure
+    create_structure
     create_config_files
     create_source_files
-    replace_project_name "$project_name"
     init_git
 
-    # Install dependencies (unless skipped)
-    if [ "$skip_install" != "--skip-install" ]; then
-        install_dependencies
-    else
-        print_warning "Instalação de dependências ignorada"
-    fi
-
     # Show completion message
-    cd ..
-    show_completion "$project_name"
+    show_completion
 }
 
 # Run main function
