@@ -121,13 +121,26 @@ create_structure() {
     # Create fundamental structure
     mkdir -p src/app/{providers,routes,styles}
     mkdir -p src/features
-    mkdir -p src/shared/{components,lib,services,types}
+    mkdir -p src/shared/{components,lib,services,types,mappers}
 
-    # Create feature example (students)
-    mkdir -p src/features/students/{components,hooks,types}
+    # Create feature example (home)
+    mkdir -p src/features/home/{components,hooks,types,mappers}
 
     # Create shared components structure
     mkdir -p src/shared/components/{ui,layout}
+
+    # Create .gitkeep files in empty directories
+    touch src/app/providers/.gitkeep
+    touch src/app/styles/.gitkeep
+    touch src/features/home/components/.gitkeep
+    touch src/features/home/hooks/.gitkeep
+    touch src/features/home/types/.gitkeep
+    touch src/features/home/mappers/.gitkeep
+    touch src/shared/components/layout/.gitkeep
+    touch src/shared/lib/.gitkeep
+    touch src/shared/services/.gitkeep
+    touch src/shared/types/.gitkeep
+    touch src/shared/mappers/.gitkeep
 
     print_success "Estrutura de pastas criada"
 }
@@ -161,12 +174,204 @@ EOF
     print_success "Vite configurado com Tailwind CSS e path aliases"
 }
 
-# Create environment file (DESABILITADO)
+# Create environment file
 create_env_file() {
     print_header "Criando Arquivo de Ambiente"
 
-    print_info "Arquivo .env não criado - configure manualmente se necessário"
-    print_success "Etapa pulada"
+    print_info "Criando arquivo .env com parâmetros padrão..."
+
+    cat > .env << 'EOF'
+# API Configuration
+VITE_API_URL=
+VITE_API_TOKEN=
+VITE_API_ID=
+VITE_API_SECRET=
+
+# Environment
+VITE_ENV=development
+EOF
+
+    print_success "Arquivo .env criado"
+}
+
+# Create TypeScript environment types
+create_vite_env_types() {
+    print_header "Configurando Tipos de Ambiente"
+
+    print_info "Criando arquivo vite-env.d.ts com tipagem das variáveis..."
+
+    cat > src/vite-env.d.ts << 'EOF'
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string
+  readonly VITE_API_TOKEN: string
+  readonly VITE_API_ID: string
+  readonly VITE_API_SECRET: string
+  readonly VITE_ENV: 'development' | 'production'
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+EOF
+
+    print_success "Tipos de ambiente configurados"
+}
+
+# Configure Axios with interceptors and service layer
+configure_axios() {
+    print_header "Configurando Axios"
+
+    print_info "Criando instância configurada do Axios..."
+
+    # Create axios lib file
+    cat > src/shared/lib/axios.ts << 'EOF'
+import axios from 'axios'
+
+const baseURL = import.meta.env.VITE_API_URL
+const apiToken = import.meta.env.VITE_API_TOKEN
+
+export const api = axios.create({
+  baseURL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    ...(apiToken && { Authorization: `Bearer ${apiToken}` }),
+  },
+})
+
+// Request interceptor
+api.interceptors.request.use(
+  (config) => {
+    // Adicionar logs em desenvolvimento
+    if (import.meta.env.VITE_ENV === 'development') {
+      console.log('🚀 Request:', config.method?.toUpperCase(), config.url)
+    }
+    return config
+  },
+  (error) => Promise.reject(error)
+)
+
+// Response interceptor
+api.interceptors.response.use(
+  (response) => {
+    if (import.meta.env.VITE_ENV === 'development') {
+      console.log('✅ Response:', response.status, response.config.url)
+    }
+    return response
+  },
+  (error) => {
+    if (import.meta.env.VITE_ENV === 'development') {
+      console.error('❌ Error:', error.response?.status, error.config?.url)
+    }
+    return Promise.reject(error)
+  }
+)
+EOF
+
+    print_info "Criando API service layer..."
+
+    # Create api service file
+    cat > src/shared/services/api.ts << 'EOF'
+import { api } from '@/shared/lib/axios'
+import type { AxiosRequestConfig } from 'axios'
+
+export const apiService = {
+  get: <T>(url: string, config?: AxiosRequestConfig) =>
+    api.get<T>(url, config).then((res) => res.data),
+
+  post: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    api.post<T>(url, data, config).then((res) => res.data),
+
+  put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    api.put<T>(url, data, config).then((res) => res.data),
+
+  patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig) =>
+    api.patch<T>(url, data, config).then((res) => res.data),
+
+  delete: <T>(url: string, config?: AxiosRequestConfig) =>
+    api.delete<T>(url, config).then((res) => res.data),
+}
+EOF
+
+    print_info "Criando types da API..."
+
+    # Create api types file
+    cat > src/shared/types/api.types.ts << 'EOF'
+export interface ApiResponse<T> {
+  data: T
+  message?: string
+  success: boolean
+}
+
+export interface ApiError {
+  message: string
+  statusCode: number
+  errors?: Record<string, string[]>
+}
+EOF
+
+    print_success "Axios configurado com interceptors e service layer"
+}
+
+# Create routes file
+create_routes_file() {
+    print_header "Criando Sistema de Rotas"
+
+    print_info "Criando arquivo de rotas..."
+
+    mkdir -p src/app/routes
+
+    cat > src/app/routes/index.tsx << 'EOF'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { lazy, Suspense } from 'react'
+
+const Home = lazy(() => import('@/features/home'))
+
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center h-screen">
+    <span>Carregando...</span>
+  </div>
+)
+
+export const AppRoutes = () => {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  )
+}
+EOF
+
+    print_success "Sistema de rotas criado"
+}
+
+# Create home feature
+create_home_feature() {
+    print_header "Criando Feature Home"
+
+    print_info "Criando componente Home..."
+
+    cat > src/features/home/index.tsx << 'EOF'
+export default function Home() {
+  return (
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-4">Home</h1>
+      <p className="text-gray-600">
+        Página inicial - implemente conforme os padrões do time
+      </p>
+    </div>
+  )
+}
+EOF
+
+    print_success "Feature Home criada"
 }
 
 # Update .gitignore (DESABILITADO)
@@ -186,6 +391,54 @@ configure_tailwind_styles() {
 EOF
 
     print_success "Tailwind CSS configurado no arquivo de estilos"
+}
+
+# Update Vite default files
+update_vite_default_files() {
+    print_header "Atualizando Arquivos Padrão do Vite"
+
+    print_info "Removendo assets padrão do Vite..."
+
+    # Remove default Vite assets
+    rm -rf src/assets
+    rm -f public/vite.svg
+
+    # Create assets directory with .gitkeep
+    mkdir -p src/assets
+    touch src/assets/.gitkeep
+
+    print_info "Atualizando index.html..."
+
+    # Update index.html - change lang to pt-BR and remove vite.svg
+    cat > index.html << 'EOF'
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+EOF
+
+    print_info "Atualizando App.tsx..."
+
+    # Update App.tsx - remove counter example and use routes
+    cat > src/App.tsx << 'EOF'
+import { AppRoutes } from './app/routes'
+
+function App() {
+  return <AppRoutes />
+}
+
+export default App
+EOF
+
+    print_success "Arquivos padrão atualizados"
 }
 
 # Update tsconfig.json for shadcn/ui
@@ -353,7 +606,7 @@ show_completion() {
     echo -e "  ✓ react-router-dom"
     echo -e "  ✓ react-hook-form"
     echo -e "  ✓ zod"
-    echo -e "  ✓ axios"
+    echo -e "  ✓ axios (configurado)"
     echo -e "  ✓ tailwindcss + @tailwindcss/vite"
     echo -e "  ✓ shadcn/ui (inicializado)"
     echo -e "  ✓ typescript + vite"
@@ -362,12 +615,15 @@ show_completion() {
     echo -e "  ✓ Path aliases (@/*) configurados"
     echo -e "  ✓ TypeScript configurado para shadcn/ui"
     echo -e "  ✓ Tailwind CSS v4 integrado"
+    echo -e "  ✓ Axios com interceptors e service layer"
+    echo -e "  ✓ Variáveis de ambiente tipadas (.env + vite-env.d.ts)"
 
     echo -e "\n${CYAN}Estrutura:${NC}"
     echo -e "  📁 src/app/          - Configuração da aplicação"
     echo -e "  📁 src/features/     - Módulos por funcionalidade"
     echo -e "  📁 src/shared/       - Código compartilhado"
     echo -e "  📁 src/components/   - Componentes shadcn/ui"
+    echo -e "  📂 mappers/          - Transformadores API ↔ Frontend"
 
     echo -e "\n${GREEN}Git:${NC}"
     if command -v git-flow &> /dev/null; then
@@ -434,6 +690,24 @@ main() {
 
     # Create project structure
     create_structure
+
+    # Update Vite default files (index.html and App.tsx)
+    update_vite_default_files
+
+    # Create routes file
+    create_routes_file
+
+    # Create home feature
+    create_home_feature
+
+    # Create .env file
+    create_env_file
+
+    # Create vite-env.d.ts with types
+    create_vite_env_types
+
+    # Configure Axios
+    configure_axios
 
     # Initialize shadcn/ui
     init_shadcn

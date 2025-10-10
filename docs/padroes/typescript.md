@@ -102,6 +102,7 @@ src/
 │       ├── components/   # 🟡 SITUACIONAL - Componentes da feature
 │       ├── hooks/        # 🟡 SITUACIONAL - Hooks da feature
 │       ├── types/        # 🟡 SITUACIONAL - Tipos específicos
+│       ├── mappers/      # 🟡 SITUACIONAL - Transformadores API ↔ Frontend
 │       └── index.tsx     # 🔴 FUNDAMENTAL - Página principal
 │
 ├── shared/               # 🔴 FUNDAMENTAL - Código compartilhado
@@ -109,7 +110,8 @@ src/
 │   ├── hooks/            # 🟡 SITUACIONAL - Hooks genéricos
 │   ├── lib/              # 🔴 FUNDAMENTAL - Utilities
 │   ├── services/         # 🔴 FUNDAMENTAL - Serviços globais (API client)
-│   └── types/            # 🟡 SITUACIONAL - Tipos compartilhados
+│   ├── types/            # 🟡 SITUACIONAL - Tipos compartilhados
+│   └── mappers/          # 🟡 SITUACIONAL - Mappers reutilizáveis
 │
 └── main.tsx              # 🔴 FUNDAMENTAL - Entry point
 ```
@@ -209,6 +211,82 @@ export class StudentService {
   async getById(id: string): Promise<Student> { ... }
 }
 ```
+
+---
+
+### 2.4 Mappers (Transformadores de Dados)
+
+**Regra:** Separar lógica de transformação API ↔ Frontend.
+
+#### Onde usar
+- **`features/*/mappers/`** - Transformadores específicos da feature
+- **`shared/mappers/`** - Transformadores reutilizáveis globais
+
+#### ❌ Evitar - Transformação inline
+```typescript
+// services/student.service.ts
+export const studentService = {
+  getAll: async () => {
+    const response = await api.get('/students')
+    // Transformação misturada com requisição
+    return response.data.map(item => ({
+      id: item.student_id,
+      name: item.full_name,
+      createdAt: new Date(item.created_at),
+    }))
+  }
+}
+```
+
+#### ✅ Recomendado - Mapper dedicado
+```typescript
+// features/students/types/student.api.types.ts
+export interface StudentApiResponse {
+  student_id: number
+  full_name: string
+  created_at: string
+}
+
+// features/students/types/student.types.ts
+export interface Student {
+  id: number
+  name: string
+  createdAt: Date
+}
+
+// features/students/mappers/student.mapper.ts
+import type { StudentApiResponse } from '../types/student.api.types'
+import type { Student } from '../types/student.types'
+
+export const studentMapper = {
+  toDomain: (api: StudentApiResponse): Student => ({
+    id: api.student_id,
+    name: api.full_name,
+    createdAt: new Date(api.created_at),
+  }),
+
+  toApi: (student: Partial<Student>): Partial<StudentApiResponse> => ({
+    ...(student.name && { full_name: student.name }),
+  }),
+}
+
+// features/students/services/student.service.ts
+import { apiService } from '@/shared/services/api'
+import { studentMapper } from '../mappers/student.mapper'
+
+export const studentService = {
+  getAll: async (): Promise<Student[]> => {
+    const apiData = await apiService.get<StudentApiResponse[]>('/students')
+    return apiData.map(studentMapper.toDomain)
+  },
+}
+```
+
+#### Vantagens
+- ✅ Frontend desacoplado da estrutura da API
+- ✅ Fácil manutenção quando API muda
+- ✅ Testabilidade isolada
+- ✅ Reutilização de transformações
 
 ---
 
@@ -882,8 +960,11 @@ features/students/
 │   ├── useStudents.ts
 │   ├── useStudentForm.ts
 │   └── useStudentActions.ts
+├── mappers/
+│   └── student.mapper.ts
 ├── types/
-│   └── student.types.ts
+│   ├── student.types.ts
+│   └── student.api.types.ts
 ├── index.tsx              # Lista de alunos
 ├── StudentForm.tsx        # Formulário
 └── StudentView.tsx        # Visualização
@@ -1094,4 +1175,4 @@ Antes de abrir um Pull Request, verifique:
 
 ---
 
-**Última atualização:** 10/10/2025 08:42
+**Última atualização:** 10/10/2025 16:25

@@ -45,7 +45,7 @@ npm run dev
 
 ### Instalação Manual
 
-📥 **[Download do Script](https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/create-react-vite.sh)**
+📥 **[Download do Script](docs/ambiente/reactjs/assets/create-react-vite.sh)**
 
 📖 **[Instruções completas de instalação](./script-install.md)**
 
@@ -58,7 +58,9 @@ npm run dev
 ✅ **Configura Tailwind CSS v4** - Plugin Vite + configuração completa
 ✅ **Inicializa shadcn/ui** - `shadcn init` com configuração padrão
 ✅ **Path aliases** - Configura `@/*` no Vite e TypeScript
-✅ **Estrutura de pastas** - Cria `app/`, `features/`, `shared/`
+✅ **Estrutura de pastas** - Cria `app/`, `features/`, `shared/`, `mappers/`
+✅ **Axios configurado** - Instância + service layer + interceptors
+✅ **.env + tipagem** - Variáveis de ambiente com TypeScript
 ✅ **Git Flow** - Inicializa com branches `main` e `develop`
 ✅ **Arquivos de exemplo** - Cria componentes e types de exemplo
 
@@ -74,23 +76,79 @@ meu-projeto/
 │   │   ├── routes/
 │   │   └── styles/
 │   ├── features/         # Módulos por funcionalidade
-│   │   └── students/
+│   │   └── home/
 │   │       ├── components/
 │   │       ├── hooks/
-│   │       └── types/
+│   │       ├── types/
+│   │       └── mappers/      # 🆕 Transformadores de dados
 │   ├── shared/           # Código compartilhado
 │   │   ├── components/
 │   │   │   ├── ui/      # shadcn/ui components
 │   │   │   └── layout/
 │   │   ├── lib/
+│   │   │   └── axios.ts      # 🆕 Instância Axios configurada
 │   │   ├── services/
-│   │   └── types/
+│   │   │   └── api.ts        # 🆕 API Service Layer
+│   │   ├── types/
+│   │   │   └── api.types.ts  # 🆕 Types da API
+│   │   └── mappers/          # 🆕 Mappers globais
+│   ├── vite-env.d.ts         # 🆕 Tipagem de env vars
 │   └── ...
-├── vite.config.ts        # Vite + Tailwind + path aliases
+├── .env                      # 🆕 Variáveis de ambiente
+├── vite.config.ts            # Vite + Tailwind + path aliases
 ├── tsconfig.json
 └── package.json
 ```
 
 ---
 
-**Última atualização:** 10/10/2025 08:39
+## Configuração do Axios
+
+O script configura automaticamente o Axios:
+
+### Arquivos criados
+
+**`src/shared/lib/axios.ts`** - Instância configurada com:
+- Base URL do `.env`
+- Timeout de 10s
+- Interceptors para logs (dev)
+- Headers de autenticação
+
+**`src/shared/services/api.ts`** - Service layer com métodos:
+- `get<T>()`, `post<T>()`, `put<T>()`, `patch<T>()`, `delete<T>()`
+- Retorna diretamente o `.data`
+
+**`src/vite-env.d.ts`** - Tipagem TypeScript para env vars
+
+### Uso
+
+```typescript
+import { apiService } from '@/shared/services/api'
+
+const users = await apiService.get<User[]>('/users')
+```
+
+---
+
+## Mappers
+
+O script cria pastas `mappers/` para transformação de dados:
+
+### Onde usar
+- **`features/*/mappers/`** - Transformadores específicos da feature
+- **`shared/mappers/`** - Transformadores reutilizáveis
+
+### Exemplo
+```typescript
+// features/students/mappers/student.mapper.ts
+export const studentMapper = {
+  toDomain: (api: StudentApiResponse): Student => ({
+    id: api.student_id,
+    name: api.full_name,
+  }),
+}
+```
+
+---
+
+**Última atualização:** 10/10/2025 16:25

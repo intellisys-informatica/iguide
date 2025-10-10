@@ -99,7 +99,7 @@ alias scaffold-react='bash /caminho/para/create-react-vite.sh'
 
 ### 1. Download do Script
 
-Baixe o arquivo [create-react-vite.sh](./create-react-vite.sh) e salve em um diretório de sua preferência.
+Baixe o arquivo [create-react-vite.sh](docs/ambiente/reactjs/assets/create-react-vite.sh) e salve em um diretório de sua preferência.
 
 Sugestão de localização:
 ```bash
@@ -196,27 +196,33 @@ meu-projeto/
 │   │   ├── routes/
 │   │   └── styles/
 │   ├── features/
-│   │   └── students/
+│   │   └── home/
 │   │       ├── components/
 │   │       ├── hooks/
-│   │       └── types/
+│   │       ├── types/
+│   │       └── mappers/          # Transformação de dados
 │   ├── shared/
 │   │   ├── components/
-│   │   │   ├── ui/          # shadcn/ui components
+│   │   │   ├── ui/              # shadcn/ui components
 │   │   │   └── layout/
 │   │   ├── lib/
-│   │   │   └── utils.ts
+│   │   │   └── axios.ts          # Axios configurado
 │   │   ├── services/
-│   │   └── types/
+│   │   │   └── api.ts            # API Service Layer
+│   │   ├── types/
+│   │   │   └── api.types.ts
+│   │   └── mappers/
+│   ├── vite-env.d.ts             # Env types
 │   ├── App.tsx
 │   ├── main.tsx
 │   └── index.css
-├── components.json          # shadcn/ui config
-├── vite.config.ts           # Vite + Tailwind + path aliases
-├── tsconfig.json            # TypeScript config
+├── .env                          # Variáveis de ambiente
+├── components.json               # shadcn/ui config
+├── vite.config.ts                # Vite + Tailwind + path aliases
+├── tsconfig.json                 # TypeScript config
 ├── package.json
 ├── .gitignore
-└── .git/                    # Git Flow initialized
+└── .git/                         # Git Flow initialized
 ```
 
 ---
@@ -228,7 +234,9 @@ meu-projeto/
 ✅ **Configura Tailwind CSS v4** - Plugin Vite + configuração completa
 ✅ **Inicializa shadcn/ui** - `shadcn init` com configuração padrão
 ✅ **Path aliases** - Configura `@/*` no Vite e TypeScript
-✅ **Estrutura de pastas** - Cria `app/`, `features/`, `shared/`
+✅ **Estrutura de pastas** - Cria `app/`, `features/`, `shared/`, `mappers/`
+✅ **Axios configurado** - Instância + service layer + interceptors
+✅ **.env + tipagem** - Variáveis de ambiente com TypeScript
 ✅ **Git Flow** - Inicializa com branches `main` e `develop`
 ✅ **Arquivos de exemplo** - Cria componentes e types de exemplo
 
@@ -349,4 +357,4 @@ Para dúvidas ou problemas:
 
 ---
 
-**Última atualização:** 10/10/2025 08:39
+**Última atualização:** 10/10/2025 16:25
