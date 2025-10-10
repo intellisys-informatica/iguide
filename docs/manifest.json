@@ -22,16 +22,16 @@
 					"icon": "⚛️",
 					"docs": [
 						{
-							"id": "padroes-reactjs",
-							"title": "Padrões e Convenções",
-							"description": "Guia completo de padrões React + TypeScript do time",
-							"file": "ambiente/reactjs/padroes-react.md"
+							"id": "setup-reactjs",
+							"title": "Setup React + TypeScript",
+							"description": "Guia de configuração inicial para projetos React + TypeScript",
+							"file": "ambiente/reactjs/setup.md"
 						},
 						{
-							"id": "script-estruturacao",
-							"title": "Script de Estruturação",
+							"id": "script-install",
+							"title": "Instalação do Script",
 							"description": "Como instalar e usar o script de estruturação de projetos",
-							"file": "ambiente/reactjs/install-script.md"
+							"file": "ambiente/reactjs/script-install.md"
 						}
 					],
 					"subcategories": []
@@ -44,10 +44,10 @@
 			"icon": "📝",
 			"docs": [
 				{
-					"id": "javascript",
-					"title": "JavaScript/TypeScript",
-					"description": "Padrões e convenções para JS/TS",
-					"file": "padroes/javascript.md"
+					"id": "typescript",
+					"title": "React + TypeScript",
+					"description": "Padrões e convenções para projetos React + TypeScript",
+					"file": "padroes/typescript.md"
 				},
 				{
 					"id": "css",
@@ -77,8 +77,8 @@
 			"docs": [
 				{
 					"id": "fluxo",
-					"title": "Guia git e gitHub",
-					"description": "Guia de definição do fluxo de trabalho padrão da equipe de desenvolvimento para trabalhar com Git e GitHub em projetos existente",
+					"title": "Fluxo de Trabalho",
+					"description": "Guia de definição do fluxo de trabalho padrão da equipe de desenvolvimento para trabalhar com Git e GitHub em projetos existentes",
 					"file": "git/git-workflow-guide.md"
 				}
 			],

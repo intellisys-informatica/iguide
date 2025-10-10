@@ -1,50 +1,6 @@
-# Padrões e Convenções React + TypeScript
+# Padrões React + TypeScript
 
-> Guia de desenvolvimento para projetos React + TypeScript do time
-
-## 🚀 Início Rápido
-
-**Script de estruturação de projetos React:**
-
-Este script cria automaticamente a estrutura de pastas `src/` seguindo os padrões do time, configura Git Flow e path aliases.
-
-### Instalação do Script (Recomendado)
-
-#### Para Bash
-```bash
-curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | bash
-```
-
-#### Para Zsh
-```bash
-curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | zsh
-```
-
-### Como usar
-
-1. Crie o projeto React com Vite:
-```bash
-npm create vite@latest meu-projeto -- --template react-ts
-cd meu-projeto
-```
-
-2. Execute o script de estruturação:
-```bash
-create-react-ts  # ou o alias que você escolheu
-```
-
-3. Instale dependências adicionais:
-```bash
-npm install react-router-dom react-hook-form zod axios
-```
-
-### Instalação Manual
-
-📥 **[Download do Script de Scaffolding](https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/create-react-project.sh)**
-
-📖 **[Instruções completas de instalação manual](#doc/script-estruturacao)**
-
----
+> Convenções e boas práticas para projetos React + TypeScript
 
 ## Índice
 
@@ -53,7 +9,6 @@ npm install react-router-dom react-hook-form zod axios
 3. [Organização de Código](#organização-de-código)
 4. [Boas Práticas](#boas-práticas)
 5. [Exemplos Práticos](#exemplos-práticos)
-6. [Ferramentas](#ferramentas)
 
 ---
 
@@ -136,8 +91,8 @@ class StudentService {
 
 ```
 src/
-├── app/                    # 🔴 FUNDAMENTAL - Configuração da aplicação
-│   ├── providers/         # Context providers
+├── app/                  # 🔴 FUNDAMENTAL - Configuração da aplicação
+│   ├── providers/        # Context providers
 │   ├── routes/           # Definições de rotas
 │   └── styles/           # Estilos globais
 │
@@ -1112,60 +1067,6 @@ export const studentService = {
 
 ---
 
-## 6. Ferramentas
-
-### 6.1 Script de Estruturação
-
-Script para organizar projetos React seguindo os padrões do time.
-
-#### O que o script faz
-
-✅ Cria estrutura de pastas `src/` (app, features, shared)
-✅ Configura Git Flow (branches main/develop)
-✅ Cria `vite.config.ts` com path aliases (`@/`, `@app/`, `@features/`, `@shared/`)
-✅ Gera `.gitignore` se não existir
-✅ Cria arquivos TypeScript de exemplo
-
-#### O que NÃO faz
-
-❌ Não cria `package.json` (use `npm create vite@latest`)
-❌ Não instala dependências
-❌ Não cria configurações de ESLint/Tailwind
-
-#### Instalação Rápida
-
-**Bash:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | bash
-```
-
-**Zsh:**
-```bash
-curl -fsSL https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/install.sh | zsh
-```
-
-#### Uso
-
-```bash
-# 1. Criar projeto Vite
-npm create vite@latest meu-projeto -- --template react-ts
-cd meu-projeto
-
-# 2. Executar script de estruturação
-create-react-ts
-
-# 3. Instalar dependências
-npm install react-router-dom react-hook-form zod axios
-```
-
-#### Instalação Manual
-
-📥 **[Baixar create-react-project.sh](https://raw.githubusercontent.com/intellisys-informatica/devhub/main/docs/ambiente/reactjs/assets/create-react-project.sh)**
-
-📖 **[Ver instruções completas](#doc/script-estruturacao)**
-
----
-
 ## Checklist de Revisão de Código
 
 Antes de abrir um Pull Request, verifique:
@@ -1193,4 +1094,4 @@ Antes de abrir um Pull Request, verifique:
 
 ---
 
-**Última atualização:** 2025-01-07
+**Última atualização:** 10/10/2025 08:42
