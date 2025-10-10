@@ -20,6 +20,11 @@
 3. **Seguir estrutura**: novos docs vão em `docs/categoria/` + atualizar `manifest.json`
 4. **Manter padrões**: usar formato existente nos arquivos MD
 5. **HTML/CSS/JS puro**: sem frameworks, sem dependências além de marked.js e highlight.js
+6. **Data de atualização**: SEMPRE adicionar/atualizar no final dos arquivos `.md` modificados:
+   ```markdown
+   **Última atualização:** DD/MM/YYYY HH:MM
+   ```
+   Formato obrigatório: dia/mês/ano hora:minuto (ex: `10/10/2025 08:39`)
 
 ## Prioridades
 1. Código limpo e funcional
