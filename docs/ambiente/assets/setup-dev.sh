@@ -36,23 +36,20 @@ print_header() {
     echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 }
 
-# Detect OS
+# Detect OS (Ubuntu/Debian only)
 detect_os() {
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        OS="linux"
-        if [ -f /etc/debian_version ]; then
-            DISTRO="debian"
-        elif [ -f /etc/redhat-release ]; then
-            DISTRO="redhat"
-        else
-            DISTRO="unknown"
-        fi
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        OS="macos"
-    else
-        print_error "Sistema operacional não suportado: $OSTYPE"
+    if [[ "$OSTYPE" != "linux-gnu"* ]]; then
+        print_error "Este script suporta apenas Ubuntu/Debian"
+        print_error "Sistema detectado: $OSTYPE"
         exit 1
     fi
+
+    if [ ! -f /etc/debian_version ]; then
+        print_error "Este script suporta apenas Ubuntu/Debian"
+        exit 1
+    fi
+
+    print_success "Sistema Ubuntu/Debian detectado"
 }
 
 # Detect shell
@@ -126,16 +123,8 @@ install_git() {
         return
     fi
 
-    if [ "$OS" == "macos" ]; then
-        brew install git
-    elif [ "$OS" == "linux" ]; then
-        if [ "$DISTRO" == "debian" ]; then
-            sudo apt update
-            sudo apt install -y git
-        elif [ "$DISTRO" == "redhat" ]; then
-            sudo yum install -y git
-        fi
-    fi
+    sudo apt update
+    sudo apt install -y git
 
     print_success "Git instalado: $(git --version)"
 }
@@ -149,15 +138,7 @@ install_git_flow() {
         return
     fi
 
-    if [ "$OS" == "macos" ]; then
-        brew install git-flow
-    elif [ "$OS" == "linux" ]; then
-        if [ "$DISTRO" == "debian" ]; then
-            sudo apt install -y git-flow
-        elif [ "$DISTRO" == "redhat" ]; then
-            sudo yum install -y gitflow
-        fi
-    fi
+    sudo apt install -y git-flow
 
     print_success "Git Flow instalado"
 }
@@ -199,49 +180,43 @@ install_docker() {
         return
     fi
 
-    if [ "$OS" == "macos" ]; then
-        print_info "Instalando Docker Desktop para macOS..."
-        brew install --cask docker
-        print_warning "Abra o Docker Desktop manualmente para completar a instalação"
-    elif [ "$OS" == "linux" ]; then
-        print_info "Instalando Docker no Linux..."
+    print_info "Instalando Docker..."
 
-        # Remove old versions
-        sudo apt remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
+    # Remove old versions
+    sudo apt remove -y docker docker-engine docker.io containerd runc 2>/dev/null || true
 
-        # Install dependencies
-        sudo apt update
-        sudo apt install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
+    # Install dependencies
+    sudo apt update
+    sudo apt install -y \
+        ca-certificates \
+        curl \
+        gnupg \
+        lsb-release
 
-        # Add Docker's official GPG key
-        sudo mkdir -p /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    # Add Docker's official GPG key
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-        # Set up repository
-        echo \
-          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    # Set up repository
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-        # Install Docker Engine
-        sudo apt update
-        sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    # Install Docker Engine
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-        # Configure Docker to start on boot
-        sudo systemctl enable docker.service
-        sudo systemctl enable containerd.service
-        sudo systemctl start docker
+    # Configure Docker to start on boot
+    sudo systemctl enable docker.service
+    sudo systemctl enable containerd.service
+    sudo systemctl start docker
 
-        # Add user to docker group (no sudo required)
-        sudo usermod -aG docker $USER
+    # Add user to docker group (no sudo required)
+    sudo usermod -aG docker $USER
 
-        print_success "Docker instalado"
-        print_info "Docker configurado para iniciar com o sistema"
-        print_warning "IMPORTANTE: Faça logout e login novamente para usar Docker sem sudo"
-    fi
+    print_success "Docker instalado"
+    print_info "Docker configurado para iniciar com o sistema"
+    print_warning "IMPORTANTE: Faça logout e login novamente para usar Docker sem sudo"
 }
 
 # Install curl
@@ -253,12 +228,8 @@ install_curl() {
         return
     fi
 
-    if [ "$OS" == "macos" ]; then
-        print_info "curl já vem instalado no macOS"
-    elif [ "$OS" == "linux" ]; then
-        sudo apt install -y curl
-        print_success "curl instalado"
-    fi
+    sudo apt install -y curl
+    print_success "curl instalado"
 }
 
 # Install vim
@@ -270,11 +241,7 @@ install_vim() {
         return
     fi
 
-    if [ "$OS" == "macos" ]; then
-        brew install vim
-    elif [ "$OS" == "linux" ]; then
-        sudo apt install -y vim
-    fi
+    sudo apt install -y vim
 
     print_success "vim instalado"
 }
@@ -293,25 +260,19 @@ install_nodejs() {
         fi
     fi
 
-    if [ "$OS" == "macos" ]; then
-        print_info "Instalando via Homebrew..."
-        brew install node@lts
-        brew link --overwrite node@lts
-    elif [ "$OS" == "linux" ]; then
-        print_info "Instalando via NodeSource..."
+    print_info "Instalando via NodeSource..."
 
-        # Remove old Node if exists
-        sudo apt remove -y nodejs npm 2>/dev/null || true
+    # Remove old Node if exists
+    sudo apt remove -y nodejs npm 2>/dev/null || true
 
-        # Install from NodeSource (LTS)
-        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-        sudo apt install -y nodejs
+    # Install from NodeSource (LTS)
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt install -y nodejs
 
-        # Verify npm is installed
-        if ! command_exists npm; then
-            print_error "npm não foi instalado corretamente"
-            exit 1
-        fi
+    # Verify npm is installed
+    if ! command_exists npm; then
+        print_error "npm não foi instalado corretamente"
+        exit 1
     fi
 
     print_success "Node.js instalado: $(node --version)"
@@ -337,24 +298,26 @@ install_go() {
         fi
     fi
 
-    if [ "$OS" == "macos" ]; then
-        brew install go
-    elif [ "$OS" == "linux" ]; then
-        # Get latest stable version
-        GO_VERSION=$(curl -s https://go.dev/VERSION?m=text | head -n1)
-        GO_TAR="${GO_VERSION}.linux-amd64.tar.gz"
-
-        print_info "Baixando Go $GO_VERSION..."
-        wget -q --show-progress "https://go.dev/dl/$GO_TAR"
-
-        print_info "Instalando..."
-        sudo rm -rf /usr/local/go
-        sudo tar -C /usr/local -xzf "$GO_TAR"
-        rm "$GO_TAR"
+    # Check if wget is installed
+    if ! command_exists wget; then
+        print_info "wget não encontrado, instalando..."
+        sudo apt install -y wget
     fi
 
+    # Get latest stable version
+    GO_VERSION=$(curl -s https://go.dev/VERSION?m=text | head -n1)
+    GO_TAR="${GO_VERSION}.linux-amd64.tar.gz"
+
+    print_info "Baixando Go $GO_VERSION..."
+    wget -q --show-progress "https://go.dev/dl/$GO_TAR"
+
+    print_info "Instalando..."
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "$GO_TAR"
+    rm "$GO_TAR"
+
     configure_go_path
-    print_success "Go instalado: $(go version)"
+    print_success "Go instalado: $(/usr/local/go/bin/go version)"
 }
 
 # Configure Go PATH
@@ -391,33 +354,18 @@ EOF
     print_info "GOROOT: /usr/local/go"
 
     # Install useful Go tools
-    if command_exists go; then
-        print_info "Instalando ferramentas Go úteis..."
-        export GOPATH=$HOME/.go
-        export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+    print_info "Instalando ferramentas Go úteis..."
 
-        go install golang.org/x/tools/cmd/goimports@latest 2>/dev/null || print_warning "Erro ao instalar goimports"
-        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest 2>/dev/null || print_warning "Erro ao instalar golangci-lint"
+    # Use PATH temporário para instalação
+    export GOPATH=$HOME/.go
+    export PATH=/usr/local/go/bin:$GOPATH/bin:$PATH
 
-        print_success "Ferramentas Go instaladas"
-    fi
+    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest 2>/dev/null || print_warning "Erro ao instalar goimports"
+    /usr/local/go/bin/go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest 2>/dev/null || print_warning "Erro ao instalar golangci-lint"
+
+    print_success "Ferramentas Go instaladas"
 }
 
-# Install Homebrew (macOS only)
-install_homebrew() {
-    if [ "$OS" != "macos" ]; then
-        return
-    fi
-
-    if command_exists brew; then
-        print_info "Homebrew já instalado"
-        return
-    fi
-
-    print_header "Instalando Homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    print_success "Homebrew instalado"
-}
 
 # Show summary
 show_summary() {
@@ -455,7 +403,7 @@ show_summary() {
 
     echo -e "\n${YELLOW}Próximos passos:${NC}"
 
-    if [ "$OS" == "linux" ] && [ "$INSTALL_ESSENTIALS" == true ]; then
+    if [ "$INSTALL_ESSENTIALS" == true ]; then
         echo "1. Faça logout e login novamente para usar Docker sem sudo"
     fi
 
@@ -478,16 +426,10 @@ main() {
     detect_os
     detect_shell
 
-    print_info "Sistema: $OS ($DISTRO)"
     print_info "Shell: $SHELL_TYPE ($SHELL_RC)"
     echo ""
 
     ask_installation_type
-
-    # Install Homebrew first on macOS
-    if [ "$OS" == "macos" ]; then
-        install_homebrew
-    fi
 
     # Essential tools
     if [ "$INSTALL_ESSENTIALS" == true ]; then
