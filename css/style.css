@@ -309,11 +309,16 @@ a:hover {
 
 .nav-category-icon {
     font-size: 1.2rem;
+    min-width: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .nav-category-level-1 > .nav-category-header .nav-category-icon,
 .nav-category-level-2 > .nav-category-header .nav-category-icon {
     font-size: 1rem;
+    min-width: 1.2rem;
 }
 
 .nav-category-title {
@@ -340,20 +345,51 @@ a:hover {
 }
 
 .nav-item {
-    display: block;
-    padding: 0.5rem 1.5rem 0.5rem 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     color: var(--text-secondary);
     transition: all var(--transition);
     border-left: 3px solid transparent;
 }
 
-/* Ajusta padding dos itens baseado no nível da categoria pai */
-.nav-category-level-1 > .nav-category-items > .nav-item {
-    padding-left: 4rem;
+.nav-item-icon {
+    min-width: 1.5rem;
+    display: inline-flex;
 }
 
+.nav-item-title {
+    flex: 1;
+}
+
+/* Ajusta padding dos itens baseado no nível da categoria pai */
+/* Docs de nível 0 (filhos diretos de categorias principais) */
+/* Devem alinhar com subcategorias de nível 1 que têm padding-left: 2.5rem */
+.nav-category-level-0 > .nav-category-items > .nav-item {
+    padding-left: 2.5rem;
+}
+
+.nav-category-level-0 > .nav-category-items > .nav-item .nav-item-icon {
+    min-width: 1.2rem;
+}
+
+/* Docs de nível 1 (filhos de subcategorias) */
+.nav-category-level-1 > .nav-category-items > .nav-item {
+    padding-left: 2.5rem;
+}
+
+.nav-category-level-1 > .nav-category-items > .nav-item .nav-item-icon {
+    min-width: 1.2rem;
+}
+
+/* Docs de nível 2 (filhos de sub-subcategorias) */
 .nav-category-level-2 > .nav-category-items > .nav-item {
-    padding-left: 5rem;
+    padding-left: 3.5rem;
+}
+
+.nav-category-level-2 > .nav-category-items > .nav-item .nav-item-icon {
+    min-width: 1.2rem;
 }
 
 .nav-item:hover {

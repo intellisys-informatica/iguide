@@ -71,7 +71,8 @@ export class Navigation {
             const isActive = this.currentDoc?.id === doc.id ? 'active' : '';
             return `
                 <a href="#doc/${doc.id}" class="nav-item ${isActive}" data-doc-id="${doc.id}">
-                    ${doc.title}
+                    <span class="nav-item-icon"></span>
+                    <span class="nav-item-title">${doc.title}</span>
                 </a>
             `;
         }).join('');
